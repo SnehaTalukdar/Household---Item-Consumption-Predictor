@@ -3,46 +3,36 @@ import base64
 
 def set_bg():
     with open("PIC.png", "rb") as f:
-        encoded = base64.b64encode(f.read()).decode()
+        data = f.read()
+    encoded = base64.b64encode(data).decode()
 
-    st.markdown(f"""
-    <style>
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("data:image/png;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
 
-    /* Background image */
-    .stApp {{
-        background-image: url("data:image/png;base64,{encoded}");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }}
+        .stApp::before {{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(6px);
+            z-index: 0;
+        }}
 
-    /* Blur overlay */
-    .stApp::before {{
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        backdrop-filter: blur(8px);
-        background-color: rgba(0,0,0,0.2);
-        z-index: 0;
-    }}
-
-    /* Bring content above blur */
-    .main {{
-        position: relative;
-        z-index: 1;
-        font-size: 20px;
-        font-weight: 700;
-        color: #111;
-    }}
-
-    /* Make text bold + dark */
-    h1, h2, h3, p, label {{
-        color: #111 !important;
-        font-weight: 800 !important;
-    }}
-
-    </style>
-    """, unsafe_allow_html=True)
+        .main {{
+            position: relative;
+            z-index: 1;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )

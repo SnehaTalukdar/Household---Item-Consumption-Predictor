@@ -3,48 +3,30 @@ from utils import set_bg
 
 set_bg()
 
-st.title("🧾 Input Page")
+st.title("🧾 Household ML Input")
 
-salary = st.number_input("Monthly Salary (₹)", min_value=0, value=0)
+salary = st.number_input("Salary (₹)", 0)
+family = st.number_input("Family Size", 1, 10)
 
-st.subheader("🛒 Essentials")
+rice = st.number_input("Rice (kg)", 0)
+lentils = st.number_input("Lentils (kg)", 0)
+oil = st.number_input("Oil (L)", 0)
+veg = st.number_input("Vegetables (kg)", 0)
+fruits = st.number_input("Fruits (kg)", 0)
+gas = st.number_input("Gas Cylinders", 0)
+spices = st.number_input("Spices (kg)", 0)
 
-rice = st.number_input("Rice (₹60/kg) - kg", min_value=0.0, value=0.0)
-dal = st.number_input("Dal (₹120/kg) - kg", min_value=0.0, value=0.0)
-flour = st.number_input("Flour (₹45/kg) - kg", min_value=0.0, value=0.0)
-vegetables = st.number_input("Vegetables (₹40/kg) - kg", min_value=0.0, value=0.0)
-fruits = st.number_input("Fruits (₹80/kg) - kg", min_value=0.0, value=0.0)
-oil = st.number_input("Oil (₹150/litre)", min_value=0.0, value=0.0)
-spices = st.number_input("Spices (₹200/unit)", min_value=0.0, value=0.0)
-gas = st.number_input("Gas Cylinder (₹850/unit)", min_value=0.0, value=0.0)
+st.session_state["input_data"] = {
+    "Salary": salary,
+    "Family_Size": family,
+    "Rice": rice,
+    "Lentils": lentils,
+    "Oil": oil,
+    "Vegetables": veg,
+    "Fruits": fruits,
+    "Gas": gas,
+    "Spices": spices
+}
 
-st.subheader("🧃 Extras (Optional)")
-
-bread = st.number_input("Bread (₹20/unit)", min_value=0.0, value=0.0)
-juice = st.number_input("Juice (₹30/unit)", min_value=0.0, value=0.0)
-chocolate = st.number_input("Chocolate (₹10/unit)", min_value=0.0, value=0.0)
-
-extra_notes = st.text_area("Extra Notes (for reference only)")
-
-if st.button("🧮 Calculate"):
-
-    essentials_total = (
-        rice*60 + dal*120 + flour*45 + vegetables*40 +
-        fruits*80 + oil*150 + spices*200 + gas*850
-    )
-
-    extras_total = (
-        bread*20 + juice*30 + chocolate*10
-    )
-
-    total = essentials_total + extras_total
-
-    st.session_state["salary"] = salary
-    st.session_state["total"] = total
-    st.session_state["done"] = True
-
-    st.success(f"Total Expense: ₹{total}")
-
-if st.session_state.get("done"):
-    if st.button("➡ Next"):
-        st.switch_page("pages/Result.py")
+if st.button("➡ NEXT"):
+    st.switch_page("pages/Result.py")

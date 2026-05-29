@@ -1,27 +1,49 @@
 import streamlit as st
+import joblib
+import pandas as pd
+import matplotlib.pyplot as plt
 from utils import set_bg
 
 set_bg()
 
-st.title("📊 Budget Result")
+model = joblib.load("household_model.pkl")
 
-salary = st.session_state.get("salary", 0)
-total = st.session_state.get("total", 0)
+st.title("📊 ML Prediction Result")
 
-balance = salary - total
+if "input_data" not in st.session_state:
+    st.warning("Go to Input page first")
+    st.stop()
 
-st.write(f"💰 Salary: ₹{salary}")
-st.write(f"🧾 Total Expense: ₹{total}")
-st.write(f"💵 Savings: ₹{balance}")
+data = st.session_state["input_data"]
 
-if balance < 0:
-    st.error(f"🔴 Over Budget by ₹{abs(balance)}")
-elif balance <= 2000:
-    st.warning("🟡 Under Budget (Low Savings)")
+X = pd.DataFrame([data])
+
+prediction = model.predict(X)[0]
+salary = data["Salary"]
+
+# ---------------- STATUS ----------------
+if prediction > salary:
+    status = "❌ OVER BUDGET"
+elif prediction < salary * 0.7:
+    status = "✅ UNDER BUDGET"
 else:
-    st.success("🟢 Optimal Budget")
+    status = "⚖️ OPTIMAL"
 
-st.divider()
+st.metric("Predicted Expense", f"₹{round(prediction,2)}")
+st.metric("Salary", f"₹{salary}")
+st.write("Status:", status)
 
-if st.button("🎉 Finish"):
+# ---------------- GRAPH ----------------
+st.subheader("📊 Item-wise Consumption")
+
+items = list(data.keys())[2:]
+values = list(data.values())[2:]
+
+fig, ax = plt.subplots()
+ax.bar(items, values)
+plt.xticks(rotation=45)
+
+st.pyplot(fig)
+
+if st.button("➡ NEXT"):
     st.switch_page("pages/Thank_You.py")
