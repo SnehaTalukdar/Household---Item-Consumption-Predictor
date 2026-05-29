@@ -1,33 +1,22 @@
 # Household Item Consumption Predictor
 
 ## Project Overview:
-Machine learning-based system designed to predict future household item consumption using historical purchasing and usage patterns.
+Machine learning-based system designed to predict future household item consumption along with budgeting
 
-This project focuses on helping users manage inventory efficiently, reduce wastage, and improve planning.
+This is an end-to-end Machine Learning project that predicts household expenses using Random Forest Regressor.
 
-## Features:
-- Consumption trend prediction
-- Data preprocessing
-- Machine learning-based forecasting
-- Data visualization
-- Model saving and loading
 
 ## Technologies Used:
 - Python
+- Streamlit
 - Pandas
 - Scikit-learn
 - Matplotlib
-- Joblib
+
 
 ## Machine Learning Model:
-- Random Forest Regressor
+- Random Forest Regressor trained on Synthetic dataset.
 
-## Files Included:
-- model.py
-- predict.py
-- Dataset Files
-- Model files (.pkl)
-- Output figures/screenshots
 
 ## Project Type:
 Collaborative academic group project.
