@@ -10,12 +10,16 @@ import joblib
 df = pd.read_csv("household_ml_dataset.csv")
 
 # ---------------- FEATURES & TARGET ----------------
-X = df.drop("Expense", axis=1)
+# Remove Salary because it was dominating predictions
+X = df.drop(["Expense", "Salary"], axis=1)
+
 y = df["Expense"]
 
 # ---------------- TRAIN TEST SPLIT ----------------
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X, y,
+    test_size=0.2,
+    random_state=42
 )
 
 # ---------------- MODEL ----------------
@@ -25,6 +29,7 @@ model = RandomForestRegressor(
     random_state=42
 )
 
+# ---------------- TRAIN MODEL ----------------
 model.fit(X_train, y_train)
 
 # ---------------- PREDICTION ----------------
@@ -40,12 +45,16 @@ print("RMSE:", rmse)
 # ======================================================
 # 📊 1. ACTUAL vs PREDICTED GRAPH
 # ======================================================
-plt.figure()
+plt.figure(figsize=(6, 5))
+
 plt.scatter(y_test, y_pred)
+
 plt.xlabel("Actual Expense")
 plt.ylabel("Predicted Expense")
 plt.title("Actual vs Predicted Expense")
+
 plt.grid()
+
 plt.show()
 
 # ======================================================
@@ -53,25 +62,34 @@ plt.show()
 # ======================================================
 errors = y_test - y_pred
 
-plt.figure()
+plt.figure(figsize=(6, 5))
+
 plt.hist(errors, bins=20)
+
 plt.title("Prediction Error Distribution")
 plt.xlabel("Error")
 plt.ylabel("Frequency")
+
 plt.grid()
+
 plt.show()
 
 # ======================================================
-# 🌲 3. FEATURE IMPORTANCE (VERY IMPORTANT FOR RF)
+# 🌲 3. FEATURE IMPORTANCE
 # ======================================================
 importances = model.feature_importances_
+
 features = X.columns
 
-plt.figure()
+plt.figure(figsize=(7, 5))
+
 plt.barh(features, importances)
+
 plt.title("Feature Importance (Random Forest)")
 plt.xlabel("Importance Score")
+
 plt.grid()
+
 plt.show()
 
 # ---------------- SAVE MODEL ----------------
