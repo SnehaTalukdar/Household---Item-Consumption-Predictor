@@ -14,7 +14,6 @@ st.write(f"💰 Salary: ₹{salary}")
 st.write(f"🧾 Total Expense: ₹{total}")
 st.write(f"💵 Savings: ₹{balance}")
 
-# ✅ SINGLE CLEAN STATUS ONLY
 if balance < 0:
     st.error(f"🔴 Over Budget by ₹{abs(balance)}")
 elif balance <= 2000:

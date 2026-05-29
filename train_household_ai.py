@@ -1,8 +1,7 @@
 import pandas as pd
-import pickle
 import os
-import numpy as np
 import matplotlib.pyplot as plt
+import joblib
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
@@ -16,7 +15,7 @@ file_path = os.path.join(
 
 df = pd.read_csv(file_path)
 
-# -------------------- DATE FIX --------------------
+# -------------------- DATE CLEANING --------------------
 df["Purchase_Date"] = pd.to_datetime(
     df["Purchase_Date"],
     format="mixed",
@@ -30,10 +29,8 @@ df["Year"] = df["Purchase_Date"].dt.year
 df["Month"] = df["Purchase_Date"].dt.month
 df["Day"] = df["Purchase_Date"].dt.day
 
-df["Item"] = df["Item"].astype("category").cat.codes
-
-# -------------------- FEATURES / TARGET --------------------
-X = df[["Item", "Year", "Month", "Day"]]
+# -------------------- FEATURES & TARGET --------------------
+X = df[["Year", "Month", "Day"]]
 y = df["Quantity"]
 
 # -------------------- TRAIN TEST SPLIT --------------------
@@ -41,8 +38,12 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# -------------------- MODEL --------------------
-model = RandomForestRegressor(n_estimators=100, random_state=42)
+# -------------------- MODEL TRAINING --------------------
+model = RandomForestRegressor(
+    n_estimators=100,
+    random_state=42
+)
+
 model.fit(X_train, y_train)
 
 # -------------------- PREDICTION --------------------
@@ -58,40 +59,34 @@ print("MAE:", mae)
 print("MSE:", mse)
 print("R2 Score:", r2)
 
-# -------------------- 📉 GRAPH 1: ACTUAL vs PREDICTED --------------------
-plt.figure(figsize=(8,5))
-plt.plot(y_test.values[:50], label="Actual", marker='o')
-plt.plot(y_pred[:50], label="Predicted", marker='x')
+# -------------------- GRAPH 1: ACTUAL VS PREDICTED --------------------
+plt.figure()
+plt.plot(y_test.values[:50], label="Actual")
+plt.plot(y_pred[:50], label="Predicted")
 plt.title("Actual vs Predicted Quantity")
-plt.xlabel("Samples")
-plt.ylabel("Quantity")
 plt.legend()
 plt.grid()
 plt.show()
 
-# -------------------- 📉 GRAPH 2: ERROR DISTRIBUTION --------------------
+# -------------------- GRAPH 2: ERROR DISTRIBUTION --------------------
 errors = y_test.values - y_pred
 
-plt.figure(figsize=(8,5))
-plt.hist(errors, bins=20, color='skyblue')
+plt.figure()
+plt.hist(errors, bins=20)
 plt.title("Prediction Error Distribution")
-plt.xlabel("Error")
-plt.ylabel("Frequency")
 plt.grid()
 plt.show()
 
-# -------------------- 📉 GRAPH 3: SCATTER PLOT --------------------
-plt.figure(figsize=(6,6))
+# -------------------- GRAPH 3: SCATTER PLOT --------------------
+plt.figure()
 plt.scatter(y_test, y_pred)
-plt.title("Actual vs Predicted (Scatter)")
+plt.title("Actual vs Predicted (Scatter Plot)")
 plt.xlabel("Actual")
 plt.ylabel("Predicted")
 plt.grid()
 plt.show()
 
 # -------------------- SAVE MODEL --------------------
-with open("household_ai_model.pkl", "wb") as f:
-    pickle.dump(model, f)
+joblib.dump(model, "household_model.pkl")
 
-print("\n✅ AI MODEL TRAINED SUCCESSFULLY")
-print("📦 Model saved as household_ai_model.pkl")
+print("\n✅ MODEL TRAINED AND SAVED SUCCESSFULLY")
