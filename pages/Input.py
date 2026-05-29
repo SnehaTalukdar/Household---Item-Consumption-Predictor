@@ -18,23 +18,33 @@ oil = st.number_input("Oil (₹150/litre)", min_value=0.0, value=0.0)
 spices = st.number_input("Spices (₹200/unit)", min_value=0.0, value=0.0)
 gas = st.number_input("Gas Cylinder (₹850/unit)", min_value=0.0, value=0.0)
 
-extra = st.text_area("Extra Notes")
+st.subheader("🧃 Extras (Optional)")
+
+bread = st.number_input("Bread (₹20/unit)", min_value=0.0, value=0.0)
+juice = st.number_input("Juice (₹30/unit)", min_value=0.0, value=0.0)
+chocolate = st.number_input("Chocolate (₹10/unit)", min_value=0.0, value=0.0)
+
+extra_notes = st.text_area("Extra Notes (for reference only)")
 
 if st.button("🧮 Calculate"):
 
-    total = (
+    essentials_total = (
         rice*60 + dal*120 + flour*45 + vegetables*40 +
         fruits*80 + oil*150 + spices*200 + gas*850
     )
 
+    extras_total = (
+        bread*20 + juice*30 + chocolate*10
+    )
+
+    total = essentials_total + extras_total
+
     st.session_state["salary"] = salary
     st.session_state["total"] = total
-    st.session_state["extra"] = extra
     st.session_state["done"] = True
 
     st.success(f"Total Expense: ₹{total}")
 
 if st.session_state.get("done"):
-
     if st.button("➡ Next"):
         st.switch_page("pages/Result.py")
